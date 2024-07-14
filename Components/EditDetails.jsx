@@ -10,7 +10,7 @@ export default function EditDetails({
   setEditingMode,
   userDetails,
   avatars,
-  setUpdated,
+  setUpdatedDetails,
 }) {
   const [newUsername, setNewUsername] = useState(userDetails.username);
   const [newEmail, setNewEmail] = useState(userDetails.email);
@@ -28,20 +28,19 @@ export default function EditDetails({
     return { ...avatar, avatar_url: { uri: avatar.avatar_url } };
   });
 
-
   const saveUserDetails = async () => {
     const patchBody = {
       username: newUsername,
       email: newEmail,
       avatar_id: selectedAvatarId,
     };
-    editUser(userDetails.username, patchBody);
-    if (userDetails.username !== patchBody.username) {
-      logout(navigation);
-    }
-    setEditingMode(false);
-    setUpdated(true);
-    
+    await editUser(patchBody).then(() => {
+      if (userDetails.username !== patchBody.username) {
+        logout(navigation);
+      }
+      setEditingMode(false);
+      setUpdatedDetails(true);
+    });
   };
 
   return (
