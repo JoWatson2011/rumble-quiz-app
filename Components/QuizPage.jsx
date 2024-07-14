@@ -1,36 +1,26 @@
-import { View, Text, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { useEffect, useState, useContext } from "react";
-import { getQuestions } from "../utils/questionsApi";
 import React from "react";
 import CountdownTimer from "./Countdown";
 import QuestionCard from "./QuestionCard";
 import PlayerAvatars from "./PlayerAvatars";
-import ProgressBar from "./ProgressBar";
 import { socket } from "../socket";
 import WaitingRoom from "./WaitingRoom";
-import {UserContext} from "../context/UserContext";
+import { UserContext } from "../context/UserContext";
 
 export default function QuizPage({ topic_id }) {
   const [avatarsReceived, setAvatarsReceived] = useState(false);
-  const { userLogged, login } = useContext(UserContext);
+  const { userLogged } = useContext(UserContext);
   useEffect(() => {
-    console.log("<<: mount QuizPage!! :>> ");
-    console.log("userLogged mounting QuizPage:>> ", userLogged);
-    console.log("<<: topic_id!! QuizPage :>> ", topic_id);
     socket.on("avatars", () => {
-      setAvatarsReceived(true)
-    })
+      setAvatarsReceived(true);
+    });
     return () => {
-      console.log("<<: leaving QuizPage:>> ");
-      console.log("userLogged leaving QuizPage:>> ", userLogged);
-      // socket.off("avatars", () => {
-      //   setAvatarsReceived(false)
-      // })
-      //socket.emit("leave-game", topic_id, userLogged); works but not in use now
+      socket.emit("leave-game", topic_id, userLogged);
     };
   }, []);
 
-  if(avatarsReceived){
+  if (avatarsReceived) {
     return (
       <ScrollView>
         <PlayerAvatars />
@@ -39,6 +29,6 @@ export default function QuizPage({ topic_id }) {
       </ScrollView>
     );
   } else {
-    return <WaitingRoom />
+    return <WaitingRoom />;
   }
 }

@@ -1,5 +1,4 @@
-import { View, Text, TextInput, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import { View, TextInput, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 
 export default function CustomInput({

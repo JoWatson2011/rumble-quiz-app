@@ -1,14 +1,11 @@
 import React from "react";
 import {
-  Alert,
   Animated,
   StyleSheet,
   TouchableOpacity,
-  View,
 } from "react-native";
 import { CurvedBottomBarExpo } from "react-native-curved-bottom-bar";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { NavigationContainer } from "@react-navigation/native";
 import QuizContainer from "../Components/QuizContainer";
 import NotificationsList from "../Components/NotificationsList";
 import Friends from "../Components/Friends";
@@ -60,21 +57,11 @@ function AppNavigation({ theme, isLoading, setIsLoading, avatars }) {
     );
   };
 
-  // Styles are defined inside of the component to have access to the theme
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       padding: 20,
     },
-    /*shawdow: {
-      shadowColor: "transparent",
-      shadowOffset: {
-        width: 0,
-        height: 0,
-      },
-      shadowOpacity: 1,
-      shadowRadius: 5,
-    },*/
     button: {
       flex: 1,
       justifyContent: "center",
@@ -86,7 +73,7 @@ function AppNavigation({ theme, isLoading, setIsLoading, avatars }) {
       borderRadius: 30,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: colors.primary, // central button
+      backgroundColor: colors.primary,
       bottom: 30,
       shadowColor: "#000",
       shadowOffset: {

@@ -3,44 +3,22 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { socket } from "../socket";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { withTheme } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProgressBar from "./ProgressBar";
 import EndOfGame from "./EndOfGame";
 import { UserContext } from "../context/UserContext";
 function QuestionCard({ theme, remainingTime }) {
-  const { colors } = theme;
   const [questionTitle, setQuestionTitle] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [rightAnswer, setRightAnswer] = useState(null);
-  //const [userLogged, setUserLogged] = useState("");
   const [resultColor, setResultColor] = useState("");
   const [roundCounter, setRoundCounter] = useState(0);
   const [playersRemaining, setPlayersRemaining] = useState(3); // 3 is the number of the room.size
   const [endOfGame, setEndOfGame] = useState("");
-  const { userLogged, login } = useContext(UserContext);
-  
-  /* useEffect(() => {
-    const getUserLogged = async () => {
-      try {
-        const user = await AsyncStorage.getItem("userLogged");
-        if (user) {
-          setUserLogged(user);
-        }
-      } catch (error) {
-        console.error("Error retrieving user from AsyncStorage", error);
-      }
-    };
-
-    getUserLogged();
-  }, []); */
+  const { userLogged } = useContext(UserContext);
 
   useEffect(() => {
     if (userLogged) {
       const handleQuestion = (question) => {
-        console.log(
-          "question sent from backend + avatars + players remaining :>> ",
-          question
-        );
         setResultColor("");
         setPlayersRemaining(question.remainingPlayers);
 
@@ -65,7 +43,6 @@ function QuestionCard({ theme, remainingTime }) {
 
       socket.on("question", handleQuestion);
 
-      // Cleanup function to avoid multiple event listeners
       return () => {
         socket.off("question", handleQuestion);
       };
@@ -91,20 +68,16 @@ function QuestionCard({ theme, remainingTime }) {
 
     socket.emit("answer", answersFeedback);
 
-    console.log("answersFeedback :>> ", answersFeedback);
     let resultColor;
     if (choice === rightAnswer) {
       setResultColor("green");
-      console.log("WIN!!!");
     } else {
       setResultColor("red");
-      console.log("LOSE :(");
       socket.emit("leave-game", userLogged);
       setEndOfGame("lose");
     }
   };
 
-  // Styles are defined inside of the component to have access to the theme
   const styles = StyleSheet.create({
     questionCard: {
       borderRadius: 10,
@@ -137,7 +110,6 @@ function QuestionCard({ theme, remainingTime }) {
     answerButton: {
       borderRadius: 8,
       elevation: 3,
-      //backgroundColor: "#ff8c00",
       shadowOffset: { width: 1, height: 1 },
       shadowColor: "#333",
       shadowOpacity: 0.3,

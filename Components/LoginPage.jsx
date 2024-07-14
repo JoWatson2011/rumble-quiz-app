@@ -6,33 +6,22 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import CustomInput from "./CustomInput";
 import Logo from "../assets/Designer.jpeg";
 import CustomButton from "./CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { postUserLogin } from "../utils/api";
-import getUserLogged from "../utils/userLogged";
 import { UserContext } from "../context/UserContext";
 
-export default function LoginPage({ setIsLoggedIn }) {
+export default function LoginPage() {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  //const [userLogged, setUserLogged] = useState("");
-  const { userLogged, login } = useContext(UserContext);
+  const { login } = useContext(UserContext);
   const { height } = useWindowDimensions();
   const navigation = useNavigation();
 
-  /* useEffect(() => {
-    getUserLogged(setUserLogged).catch((err) => {
-      console.log(err);
-    });
-  }, []); */
-
   const onLogInButtonPressed = async () => {
-    // validate user from backend
 
     const userData = {
       username: usernameInput,
@@ -43,11 +32,9 @@ export default function LoginPage({ setIsLoggedIn }) {
   };
 
   const onForgotPasswordPressed = () => {
-    console.log("Forgot Password");
   };
 
   const onSignUpPressed = () => {
-    navigation.navigate("CreateAccount");
   };
 
   return (
@@ -111,8 +98,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#051C60",
-    // width: "95%",
-    // textAlign: "left",
+
     margin: 10,
   },
 });

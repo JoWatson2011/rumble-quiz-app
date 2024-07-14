@@ -5,27 +5,24 @@ const rumbleQuizApi = axios.create({
 });
 
 export const getUserByUsername = (userLogged) => {
-  //console.log(userLogged, "<<<userLogged");
   return rumbleQuizApi
     .get(`/users/${userLogged}`)
     .then(({ data }) => {
       return data;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error getting user data:", error);
     });
 };
 
 export const patchUserByUsername = (userLogged, patchBody) => {
-  console.log(userLogged, patchBody, "<<<PATCH");
   return rumbleQuizApi
     .patch(`/users/${userLogged}`, patchBody)
     .then(({ data }) => {
-      console.log(data, "Data");
       return data;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error patching user:", error);
     });
 };
 
@@ -36,7 +33,7 @@ export const postUserLogin = (postBody) => {
       return data;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error logging in user:", error);
     });
 };
 
@@ -47,7 +44,7 @@ export const getAvatars = () => {
       return data;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error getting avatars:", error);
     });
 };
 
@@ -55,11 +52,10 @@ export const getAvatar = (id) => {
   return rumbleQuizApi
     .get(`/avatars/${id}`)
     .then(({ data }) => {
-      // console.log("data avatar :>> ", data);
       return data;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error getting avatar:", error);
     });
 };
 
@@ -70,7 +66,7 @@ export const getUserStats = (userLogged) => {
       return data;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error getting user stats:", error);
     });
 };
 
@@ -81,7 +77,7 @@ export const getUsersPoints = () => {
       return data;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error getting leaderboard:", error);
     });
 };
 
@@ -89,11 +85,10 @@ export const getFriends = (userLogged) => {
   return rumbleQuizApi
     .get(`/users/${userLogged}/friends`)
     .then(({ data }) => {
-      //console.log("data api :>> ", data.friends);
       return data.friends;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error getting friends:", error);
     });
 };
 
@@ -101,9 +96,10 @@ export const postNewUser = (postBody) => {
   return rumbleQuizApi
     .post("/users", postBody)
     .then((data) => {
-      // console.log('data api :>> ', data);
+      console.log(data);
+      return data;
     })
     .catch((error) => {
-      console.log(error, "error");
+      console.log("Error creating new user:", error);
     });
 };
