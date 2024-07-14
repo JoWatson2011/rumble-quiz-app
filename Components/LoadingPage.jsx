@@ -22,9 +22,9 @@ export default function LoadingPage() {
 
     const timeout = setTimeout(() => {
       navigation.replace("LogIn");
-    }, 5000); // 5 seconds
+    }, 5000);
 
-    return () => clearTimeout(timeout); // Cleanup timeout on unmount
+    return () => clearTimeout(timeout); 
   }, [navigation, sv]);
 
   const animatedStyle = useAnimatedStyle(() => ({

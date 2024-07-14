@@ -7,11 +7,10 @@ import {
   Pressable,
   useWindowDimensions,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState, useContext } from "react";
 import { getCategories } from "../utils/questionsApi";
 import Topic from "./Topic";
-import TopicFlipCard from "./TopicFlipCard";
+// import TopicFlipCard from "./TopicFlipCard";
 import QuizPage from "./QuizPage";
 import { socket } from "../socket";
 import { UserContext } from "../context/UserContext";
@@ -23,45 +22,24 @@ export default function Topics() {
   const { height } = useWindowDimensions();
   const { userLogged, login } = useContext(UserContext);
 
-  /* const getUserLogged = async () => {
-    try {
-      const user = await AsyncStorage.getItem("userLogged");
-      const avatar = await AsyncStorage.getItem("avatar_url");
-      console.log(avatar, "AVATAR");
-      setUserLogged(user);
-      setAvatar(avatar);
-    } catch (error) {
-      console.error("Error retrieving user from AsyncStorage", error);
-    }
-  }; */
   useEffect(() => {
     getCategories()
       .then((data) => {
         const { trivia_categories } = data;
         setTopics(trivia_categories);
       })
-      .catch((err) => console.log("err :>> ", err));
-    /* getUserLogged(); */
+      .catch((err) => console.log("Error getting categories:", err));
   }, []);
 
-  const handleSelection = async (id, name) => {
-    console.log(id, "<< id");
-    console.log("topic name :>> ", name);
-    await setSelectedTopic(id);
+  const handleSelection = async (id) => {
+    setSelectedTopic(id);
     if (userLogged && avatar) {
-      socket.emit(
-        "topic-selected",
-        id.toString(),
-        { username: userLogged, avatar_url: avatar },
-        () => {
-          console.log("Hellooo from the client");
-        }
-      );
+      socket.emit("topic-selected", id.toString(), {
+        username: userLogged,
+        avatar_url: avatar,
+      });
     }
   };
-  // useEffect(() => {
-  //   console.log("selectedTopic :>> ", selectedTopic);
-  // }, [selectedTopic]);
 
   if (selectedTopic === undefined) {
     return (
@@ -77,7 +55,7 @@ export default function Topics() {
             return (
               <Pressable
                 key={topic.id}
-                onPress={() => handleSelection(topic.id, topic.name)}
+                onPress={() => handleSelection(topic.id)}
               >
                 <Topic topic={topic} />
               </Pressable>

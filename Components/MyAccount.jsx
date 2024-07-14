@@ -17,56 +17,37 @@ import { useNavigation } from "@react-navigation/native";
 import { withTheme } from "react-native-paper";
 import { UserContext } from "../context/UserContext";
 
-function MyAccount({ theme, setIsLoggedIn, avatars }) {
+function MyAccount({ theme, avatars }) {
   const [colourTheme, setColourTheme] = useState();
   const [editingMode, setEditingMode] = useState(false);
-  const [updated, setUpdated] = useState(false);
+  const [updatedDetails, setUpdatedDetails] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [userLoggedAvatar, setUserLoggedAvatar] = useState({});
   const { colors } = theme;
   const navigation = useNavigation();
   const { userLogged, logout } = useContext(UserContext);
 
-  // console.log("avatars in myaccount>>>", avatars)
-
-  /* const getUserLogged = async () => {
-    try {
-      const user = await AsyncStorage.getItem("userLogged");
-      setUserLogged(user);
-    } catch (error) {
-      console.error("Error retrieving user from AsyncStorage", error);
-    }
-  };
-
   useEffect(() => {
-    getUserLogged();
-  }, [userLogged]); */
-
-  useEffect(() => {
-    console.log("userLogged :>> ", userLogged);
     if (userLogged) {
-      // console.log('userLogged useeff my acc', userLogged)
-      getUserByUsername(userLogged).then(({ user }) => {
-        console.log('user :>> ', user);
-        setUserDetails(user);
-        setColourTheme(user.colour_theme_id);
-      }).catch(err => console.log('err :>> ', err));
+      getUserByUsername(userLogged)
+        .then(({ user }) => {
+          setUserDetails(user);
+          setColourTheme(user.colour_theme_id);
+        })
+        .catch((err) => console.log("Error getting user details:", err));
     }
-  }, [updated]);
-  console.log("userDetails :>> ", userDetails);
+  }, [updatedDetails]);
 
   useEffect(() => {
     if (Object.keys(userDetails).length > 0) {
       getAvatar(userDetails.avatar_id)
         .then((data) => {
-          // console.log("data avatar acc :>> ", data.avatar);
           setUserLoggedAvatar(data.avatar);
           AsyncStorage.setItem("avatar_url", data.avatar.avatar_url);
         })
-        .catch((err) => console.log("err :>> ", err));
+        .catch((err) => console.log("Error getting avatar:", err));
     }
   }, [userDetails]);
-  // console.log("userLoggedAvatar :>> ", userLoggedAvatar);
 
   const colour_themes = [
     { colour_theme_id: 1, theme_name: "Light" },
@@ -76,14 +57,13 @@ function MyAccount({ theme, setIsLoggedIn, avatars }) {
 
   const displayForm = () => {
     setEditingMode(true);
-    setUpdated(false);
+    setUpdatedDetails(false);
   };
 
   const onLogOutPressed = async () => {
     logout(navigation);
   };
 
-  // Styles are defined inside of the component to have access to the theme
   const styles = StyleSheet.create({
     container: {
       paddingTop: 50,
@@ -92,7 +72,6 @@ function MyAccount({ theme, setIsLoggedIn, avatars }) {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-around",
-      //alignItems: "center",
       backgroundColor: colors.orange,
       padding: 20,
     },
@@ -174,7 +153,7 @@ function MyAccount({ theme, setIsLoggedIn, avatars }) {
               setEditingMode={setEditingMode}
               userDetails={userDetails}
               avatars={avatars}
-              setUpdated={setUpdated}
+              setUpdatedDetails={setUpdatedDetails}
             />
           ) : null}
           {userLogged ? (

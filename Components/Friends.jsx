@@ -1,38 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { getAvatar, getFriends, getUserByUsername } from "../utils/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Avatar } from "react-native-paper";
 import { UserContext } from "../context/UserContext";
 export default function Friends() {
-  //const [userLogged, setUserLogged] = useState("");
   const [friends, setFriends] = useState([]);
   const [friendsDetails, setFriendsDetails] = useState([]);
-  const { userLogged, login } = useContext(UserContext);
-
-  /* const getUserLogged = async () => {
-    try {
-      const user = await AsyncStorage.getItem("userLogged");
-      setUserLogged(user);
-    } catch (error) {
-      console.error("Error retrieving user from AsyncStorage", error);
-    }
-  };
-
-  useEffect(() => {
-    getUserLogged();
-  }, []); */
+  const { userLogged } = useContext(UserContext);
 
   useEffect(() => {
     if (userLogged) {
       getFriends(userLogged)
         .then((data) => {
-          console.log("data friends endpoint :>> ", data);
-          const friends_usernames = data.map((fr) => fr.user2_username);
-          setFriends(friends_usernames);
+          const friendUsernames = data.map((friend) => friend.user2_username);
+          setFriends(friendUsernames);
         })
-        .catch((err) => console.log("err :>> ", err));
     }
   }, []);
 
@@ -42,20 +25,15 @@ export default function Friends() {
         getUserByUsername(friend).then(({ user }) => {
           getAvatar(user.avatar_id)
             .then(({ avatar }) => {
-              /* console.log("user inside getUserByUsername Nested :>> ", user);
-            console.log("avatar nested :>> ", avatar); */
-              const fullFriendData = { ...user, avatar_url: avatar.avatar_url };
+              const friendData = { ...user, avatar_url: avatar.avatar_url };
               setFriendsDetails((currentData) => {
-                return [...currentData, fullFriendData];
+                return [...currentData, friendData];
               });
             })
-            .catch((err) => console.log("err :>> ", err));
         });
       });
     }
   }, [friends]);
-
-  console.log("friendsDetails :>> ", friendsDetails);
 
   const renderFriendCard = (friend) => {
     return (
@@ -136,7 +114,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   friendDetails: {
-    //flex: 1,
     width: "60%",
   },
   friendInfo: {

@@ -10,12 +10,11 @@ import Animated, {
   withDelay,
 } from "react-native-reanimated";
 import Logo from "../assets/Designer.jpeg";
-import AnimatedText from "./AnimatedText";
 
 const ANGLE = 10;
 const TIME = 100;
-const PAUSE_DURATION = 1000; // pause duration in milliseconds
-const WOBBLE_COUNT = 8; // number of wobbles before pause
+const PAUSE_DURATION = 1000;
+const WOBBLE_COUNT = 8;
 const EASING = Easing.linear;
 
 export default function WaitingRoom() {
@@ -29,9 +28,7 @@ export default function WaitingRoom() {
     const startAnimation = () => {
       rotation.value = withRepeat(
         withSequence(
-          // Initial move to start from -ANGLE
           withTiming(-ANGLE, { duration: TIME / 2, easing: EASING }),
-          // Wobble between -ANGLE and ANGLE
           withRepeat(
             withSequence(
               withTiming(ANGLE, { duration: TIME, easing: EASING }),
@@ -40,13 +37,11 @@ export default function WaitingRoom() {
             WOBBLE_COUNT,
             false
           ),
-          // Go back to 0 at the end
           withTiming(0, { duration: TIME / 2, easing: EASING }),
-          // Pause for a while
           withDelay(PAUSE_DURATION, withTiming(0, { duration: 0 }))
         ),
-        -1, // -1 for infinite repeat
-        false // do not reverse the entire sequence on repeat
+        -1, 
+        false 
       );
     };
 
@@ -59,7 +54,6 @@ export default function WaitingRoom() {
         <Image source={Logo} style={styles.image} />
       </Animated.View>
       <View style={styles.textContainer}>
-        {/* <AnimatedText /> */}
         <Text>Waiting for more players...</Text>
       </View>
     </View>
@@ -71,7 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff", // Ensure background color matches the app theme
+    backgroundColor: "#fff", 
   },
   box: {
     width: 200,

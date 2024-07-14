@@ -6,27 +6,13 @@ import { getUsersPoints } from "../utils/api";
 import LoadingSpinner from "./LoadingSpinner";
 import { UserContext } from "../context/UserContext";
 
-export default function LeaderBoardPage({ isLoading, setIsLoading }) {
-  //const [userLogged, setUserLogged] = useState("");
+export default function LeaderBoardPage({ setIsLoading }) {
+
   const [usersPoints, setUsersPoints] = useState([]);
   const { userLogged, login } = useContext(UserContext);
-  
-  /* const getUserLogged = async () => {
-    try {
-      const user = await AsyncStorage.getItem("userLogged");
-      setUserLogged(user);
-    } catch (error) {
-      console.error("Error retrieving user from AsyncStorage", error);
-    }
-  };
-
-  useEffect(() => {
-    getUserLogged();
-  }, []); */
-
+ 
   useEffect(() => {
     if (userLogged) {
-      // console.log("userLogged useeff my leaderboard", userLogged);
       getUsersPoints()
         .then(({ leaderboard }) => {
           const currentPlayerScore = leaderboard.find(
@@ -41,9 +27,8 @@ export default function LeaderBoardPage({ isLoading, setIsLoading }) {
           setUsersPoints(leaderboard);
           setIsLoading(false);
 
-          // console.log("userPoints", userPoints);
         })
-        .catch((err) => console.log("err :>> ", err));;
+        .catch((err) => console.log("Error getting leaderboard:", err));;
     }
   }, []);
 
@@ -74,13 +59,6 @@ export default function LeaderBoardPage({ isLoading, setIsLoading }) {
   );
   }
 
-  // console.log(currentPlayerScore, "<<<currentPlayerScore");
-
-// if(isLoading){
-//   return <LoadingSpinner/>
-// }
-
-
 const styles = StyleSheet.create({
   h2: {
     fontSize: 30,
@@ -103,7 +81,4 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: 'center'
     },
-  leaderboard: {
-    // marginBottom: 500
-  }
 });
