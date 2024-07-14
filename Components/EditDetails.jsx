@@ -10,7 +10,7 @@ export default function EditDetails({
   setEditingMode,
   userDetails,
   avatars,
-  setUpdated,
+  setUpdatedDetails,
 }) {
   const [newUsername, setNewUsername] = useState(userDetails.username);
   const [newEmail, setNewEmail] = useState(userDetails.email);
@@ -19,6 +19,7 @@ export default function EditDetails({
   );
   const { editUser, logout } = useContext(UserContext);
   const navigation = useNavigation();
+  const [displayText, setDisplayText] = useState("");
 
   if (!avatars) {
     avatars = [];
@@ -28,20 +29,27 @@ export default function EditDetails({
     return { ...avatar, avatar_url: { uri: avatar.avatar_url } };
   });
 
-
   const saveUserDetails = async () => {
     const patchBody = {
       username: newUsername,
       email: newEmail,
       avatar_id: selectedAvatarId,
     };
-    editUser(userDetails.username, patchBody);
-    if (userDetails.username !== patchBody.username) {
-      logout(navigation);
-    }
-    setEditingMode(false);
-    setUpdated(true);
-    
+    await editUser(patchBody)
+      .then(() => {
+        if (userDetails.username !== patchBody.username) {
+          setDisplayText("You will be logged out for changes to take effect");
+          setTimeout(() => {
+            setEditingMode(false);
+            setDisplayText("");
+            logout(navigation);
+          }, 5000);
+        } else {
+          setEditingMode(false);
+        }
+        setUpdatedDetails(true);
+      })
+      .then(() => {});
   };
 
   return (
@@ -78,6 +86,11 @@ export default function EditDetails({
           setSelectedAvatarId(e.avatar_id);
         }}
       />
+      {displayText ? (
+        <View>
+          <Text>{displayText}</Text>
+        </View>
+      ) : null}
       <View style={styles.buttons}>
         <Button
           title="Cancel"
@@ -135,5 +148,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 16,
     color: "grey",
+  },
+  display_text: {
+    textAlign: "center",
+    color: "red",
   },
 });

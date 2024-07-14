@@ -40,9 +40,13 @@ export const UserProvider = ({ children }) => {
   };
 
   const editUser = async (patchBody) => {
-   await patchUserByUsername(userLogged, patchBody).catch ((err) => {
-      console.log("Error in patching user:", err);
-    })
+    await patchUserByUsername(userLogged, patchBody)
+      .then(({ modifiedUser }) => {
+        setUserLogged(modifiedUser.username);
+      })
+      .catch((err) => {
+        console.log("Error in patching user:", err);
+      });
   };
 
   const logout = async (navigation) => {
