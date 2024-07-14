@@ -22,7 +22,6 @@ export default function LoginPage() {
   const navigation = useNavigation();
 
   const onLogInButtonPressed = async () => {
-
     const userData = {
       username: usernameInput,
       password: passwordInput,
@@ -31,11 +30,18 @@ export default function LoginPage() {
     login(userData, navigation);
   };
 
-  const onForgotPasswordPressed = () => {
+  const onGuestLoginPressed = async () => {
+    const userData = {
+      username: "DragonRider",
+      password: "password123",
+    };
+
+    login(userData, navigation);
   };
 
-  const onSignUpPressed = () => {
-  };
+  const onForgotPasswordPressed = () => {};
+
+  const onSignUpPressed = () => {};
 
   return (
     <ScrollView style={styles.scroll}>
@@ -73,7 +79,7 @@ export default function LoginPage() {
         />
         <CustomButton
           text="Continue as Guest"
-          onPress={onSignUpPressed}
+          onPress={onGuestLoginPressed}
           type="TERTIARY"
         />
       </View>
