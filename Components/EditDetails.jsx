@@ -19,6 +19,7 @@ export default function EditDetails({
   );
   const { editUser, logout } = useContext(UserContext);
   const navigation = useNavigation();
+  const [displayText, setDisplayText] = useState("");
 
   if (!avatars) {
     avatars = [];
@@ -34,13 +35,21 @@ export default function EditDetails({
       email: newEmail,
       avatar_id: selectedAvatarId,
     };
-    await editUser(patchBody).then(() => {
-      if (userDetails.username !== patchBody.username) {
-        logout(navigation);
-      }
-      setEditingMode(false);
-      setUpdatedDetails(true);
-    });
+    await editUser(patchBody)
+      .then(() => {
+        if (userDetails.username !== patchBody.username) {
+          setDisplayText("You will be logged out for changes to take effect");
+          setTimeout(() => {
+            setEditingMode(false);
+            setDisplayText("");
+            logout(navigation);
+          }, 5000);
+        } else {
+          setEditingMode(false);
+        }
+        setUpdatedDetails(true);
+      })
+      .then(() => {});
   };
 
   return (
@@ -77,6 +86,11 @@ export default function EditDetails({
           setSelectedAvatarId(e.avatar_id);
         }}
       />
+      {displayText ? (
+        <View>
+          <Text>{displayText}</Text>
+        </View>
+      ) : null}
       <View style={styles.buttons}>
         <Button
           title="Cancel"
@@ -134,5 +148,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 16,
     color: "grey",
+  },
+  display_text: {
+    textAlign: "center",
+    color: "red",
   },
 });
