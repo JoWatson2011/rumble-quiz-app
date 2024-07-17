@@ -1,4 +1,4 @@
-<i<img src="https://github.com/nkytruong/rumble-quiz-app/blob/main/assets/Designer.jpeg?raw=true" alt="Rumble Quiz Logo" width="200"/>
+<img src="https://github.com/nkytruong/rumble-quiz-app/blob/main/assets/Designer.jpeg?raw=true" alt="Rumble Quiz Logo" width="200"/>
 
 Rumble Quiz is a multiplayer mobile trivia game. It was built by Alex Taylor, Nikki Truong, Rocio Sainz-Maza and Jo Watson as the final project of the Northcoders Software Development bootcamp.
 We built the app using React Native and SocketIO.
